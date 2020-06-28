@@ -94,8 +94,5 @@
   </build>
   <modules>
     <module>juno</module>
-    <module>minerva</module>
-    <module>jupiter</module>
-    <module>pales</module>
   </modules>
 </project>
