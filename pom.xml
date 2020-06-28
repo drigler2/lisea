@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+  <groupId>hr.drigler.lisea</groupId>
+  <artifactId>lisea-collection</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>lisea-collection</name>
+  <url>https://github.com/drigler2/lisea</url>
+  <description>
+    Not an actual service so doesn't get ancient Rome god name.
+    Holds java/spring services in lisea ecosystem. Is not parent pom
+    in standard form and should NOT have any common dependencies other
+    then very basic ones.
+    Should basically be used for version control and to easily
+    package lisea ecosystem together.
+  </description>
+  <developers>
+    <developer>
+      <id>drigler</id>
+      <name>Damir Rigler</name>
+      <email>damir.rigler at gmail dot com</email>
+      <!-- <url></url> -->
+      <!-- <organization>ACME</organization> -->
+      <!-- <organizationUrl>http://www.example.com</organizationUrl> -->
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+      <properties>
+        <picUrl/>
+      </properties>
+    </developer>
+  </developers>
+  <!-- https://stackoverflow.com/questions/27865238/parent-pom-and-microservices -->
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.30</version>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>3.10</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>4.4</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.2.0</version>
+          <configuration>
+            <appendAssemblyId>false</appendAssemblyId>
+            <descriptors>
+              <descriptor>src/main/assembly/assembly.xml</descriptor>
+            </descriptors>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <modules>
+    <module>juno</module>
+    <module>minerva</module>
+    <module>jupiter</module>
+    <module>pales</module>
+  </modules>
+</project>

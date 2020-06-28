@@ -1,0 +1,7 @@
+server.port: 8080
+
+spring.datasource.populator:
+  filename: credentials.sql
+  enabled: true
+
+zookeeper.url: 127.0.0.1:2181

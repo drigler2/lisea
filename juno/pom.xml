@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>hr.drigler.lisea</groupId>
+    <artifactId>lisea-collection</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <groupId>hr.drigler.lisea</groupId>
+  <artifactId>juno</artifactId>
+  <version>0.1-SNAPSHOT</version>
+
+  <name>juno</name>
+  <description>
+    Jupiter's wife and a protector of Rome.
+
+    User credentials service, holds user information such as username,
+    password and permissions. Is able to validate passwords and return
+    permissions for user.
+
+    Spring security apis will be used for permissions management.
+  </description>
+  
+  <dependencyManagement>
+    <dependencies>
+    
+      <dependency>
+        <!-- Import dependency management from Spring Boot -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.2.6.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
+  
+  <dependencies>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+      
+      <dependency>
+    	<groupId>org.postgresql</groupId>
+    	<artifactId>postgresql</artifactId>
+    	<scope>runtime</scope>
+      </dependency>
+      
+      <dependency>
+    	<groupId>org.flywaydb</groupId>
+    	<artifactId>flyway-core</artifactId>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-test</artifactId>
+        <scope>test</scope>
+      </dependency>
+    
+      <dependency>
+          <groupId>org.apache.curator</groupId>
+          <artifactId>curator-x-async</artifactId>
+          <version>4.0.1</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.apache.zookeeper</groupId>
+                  <artifactId>zookeeper</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.apache.zookeeper</groupId>
+          <artifactId>zookeeper</artifactId>
+          <version>3.5.7</version>
+      </dependency>      
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

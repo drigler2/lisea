@@ -1,0 +1,31 @@
+{
+  "schema": "credentials.",
+  "user": {
+    "fields": [
+      "id",
+      "username",
+      "password",
+      "enabled"
+    ],
+    "selectAllUsers": "select * from credentials.user uu inner join credentials.user_authority ua on ua.id_user = uu.id inner join credentials.authority aa on aa.id = ua.id_authority where uu.enabled = true and ua.enabled = true",
+    "selectUserByUsername": "select * from credentials.user uu inner join credentials.user_authority ua on ua.id_user = uu.id inner join credentials.authority aa on aa.id = ua.id_authority where uu.enabled = true and ua.enabled = true and uu.username = ?",
+    "insertUser": "insert into credentials.user (username, password, enabled) values(?, ?, ?)",
+    "insertUserAndEnable": "insert into credentials.user (username, password, enabled) values(?, ?, true)",
+    "enableUser": "update credentials.user uu set enabled = true where uu.username = ?",
+    "disableUser": "update credentials.user uu set enabled = false where uu.username = ?",
+    "updatePassword": "update credentials.user uu set password = ? where uu.username = ?",
+    "updatePasswordAndEnabled": "update credentials.user uu set password = ?, enabled = ? where uu.username = ?",
+    "countUsersWithUsername": "select count(*) from credentials.user uu where uu.username = ?"
+  },
+  "authority": {
+    "fields": [
+      "id",
+      "authority_name"
+    ],
+    "selectAllAuthorities": "select * from credentials.authority",
+    "selectAuthorityByName": "select * from credentials.authority aa where aa.authority_name = ?",
+    "countAuthorityWithName": "select count(*) from credentials.authority aa where aa.authority_name = ?",
+    "updateUserAuthorityByUserAndName": "update credentials.user_authority set enabled=? where id_user=(select id from credentials.user where username=?) and id_authority=(select id from credentials.authority where authority_name=?)",
+    "insertUserAuthorityByUserAndName": "insert into credentials.user_authority (id_user, id_authority, enabled) values((select id from credentials.user where username=?),(select id from credentials.authority where authority_name=?),?)"
+  }
+}
