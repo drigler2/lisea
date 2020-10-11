@@ -26,9 +26,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import hr.drigler.lisea.juno.models.IAuthority;
-import hr.drigler.lisea.juno.repositories.DuplicateDatabaseEntryException;
 import hr.drigler.lisea.juno.repositories.IAuthorityRepository;
-import hr.drigler.lisea.juno.repositories.MissingJoinedDatabaseResourceException;
+import hr.drigler.lisea.juno.repositories.exceptions.DuplicateDatabaseEntryException;
+import hr.drigler.lisea.juno.repositories.exceptions.MissingJoinedDatabaseResourceException;
 import hr.drigler.lisea.juno.services.exceptions.AssignUserAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.DuplicateAuthorityException;
 

@@ -4,7 +4,7 @@
   <packaging>pom</packaging>
   <groupId>hr.drigler.lisea</groupId>
   <artifactId>lisea-collection</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <name>lisea-collection</name>
   <url>https://github.com/drigler2/lisea</url>
   <description>
@@ -38,15 +38,15 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.30</version>
+      <version>1.7.3</version>
     </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>3.10</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -72,7 +72,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.8.1</version>
           <configuration>
             <appendAssemblyId>false</appendAssemblyId>
             <descriptors>

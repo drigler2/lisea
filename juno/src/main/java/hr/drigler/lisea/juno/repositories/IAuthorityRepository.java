@@ -19,6 +19,8 @@ package hr.drigler.lisea.juno.repositories;
 import java.util.List;
 
 import hr.drigler.lisea.juno.models.IAuthority;
+import hr.drigler.lisea.juno.repositories.exceptions.DuplicateDatabaseEntryException;
+import hr.drigler.lisea.juno.repositories.exceptions.MissingJoinedDatabaseResourceException;
 
 public interface IAuthorityRepository {
 

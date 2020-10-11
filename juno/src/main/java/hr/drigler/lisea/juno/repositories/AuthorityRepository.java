@@ -34,6 +34,8 @@ import org.springframework.stereotype.Repository;
 import hr.drigler.lisea.juno.models.Authority;
 import hr.drigler.lisea.juno.models.IAuthority;
 import hr.drigler.lisea.juno.models.JunoJdbcQueries;
+import hr.drigler.lisea.juno.repositories.exceptions.DuplicateDatabaseEntryException;
+import hr.drigler.lisea.juno.repositories.exceptions.MissingJoinedDatabaseResourceException;
 
 @Repository
 public class AuthorityRepository extends JdbcDaoSupport implements IAuthorityRepository {
