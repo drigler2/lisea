@@ -16,22 +16,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.repositories;
 
-import org.springframework.dao.DuplicateKeyException;
+import hr.drigler.lisea.juno.models.IVulcanId;
 
-import hr.drigler.lisea.juno.models.IUserPassport;
+public interface IVulcanRepository {
 
-public interface IUserPassportRepository {
-
-    IUserPassport fetchByUsername(String username);
-
-    Integer countUserByUsername(String username);
-
-    void insertUser(IUserPassport user) throws DuplicateKeyException;
-
-    void updateUser(IUserPassport userPassport);
-
-    void deleteUser(String username);
-
-    void updateUserPassport(String username, String newPassword);
+    IVulcanId getVulcanId();
 
 }

@@ -16,7 +16,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.services;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -39,7 +38,7 @@ public interface IUserPassportService extends UserDetailsManager, UserDetailsSer
     void changeUserPassword(String username, String newPassword, String oldPassword)
         throws WrongPasswordException;
 
-    void createUserHandleDuplicates(UserDetails user)
+    void createUserHandleDuplicates(IUserPassport user)
         throws DuplicateUserException, AssignUserAuthorityException, DuplicateAuthorityException;
 
     IUserPassport loadUserPassportByUsername(String username) throws UsernameNotFoundException;

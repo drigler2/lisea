@@ -40,6 +40,7 @@ public class UserPassportService implements IUserPassportService {
     IUserPassportRepository userRepo;
     IAuthorityService authService;
     PasswordEncoder pCoder;
+    IVulcanService vulcan;
 
     @Autowired
     public UserPassportService(IUserPassportRepository userRepo, IAuthorityService authService,
@@ -82,7 +83,7 @@ public class UserPassportService implements IUserPassportService {
     }
 
     @Override
-    public void createUserHandleDuplicates(UserDetails user)
+    public void createUserHandleDuplicates(IUserPassport user)
         throws AssignUserAuthorityException, DuplicateUserException, DuplicateAuthorityException {
 
         LOG.debug("Creating user {} with authorities {}", user.getUsername(),
@@ -112,10 +113,10 @@ public class UserPassportService implements IUserPassportService {
     @Override
     public void updateUser(UserDetails user) {
 
-//        UserPassportUtils.checkRemoveUnknownAuthority(user);w
+//        UserPassportUtils.checkRemoveUnknownAuthority(user);
         authService.updateAuthorities(user);
 
-        userRepo.updateUser(UserPassportFactory.buildFromUserDetails(user));
+        userRepo.updateUser(UserPassportFactory.buildFromUserDetails(user, vulcan.getVulcanId()));
 
     }
 

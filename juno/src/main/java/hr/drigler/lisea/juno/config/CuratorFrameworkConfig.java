@@ -33,6 +33,7 @@ public class CuratorFrameworkConfig {
         int maxRetries = 3;
 
         RetryPolicy retryPolicy = new RetryNTimes(maxRetries, sleepMsBetweenRetries);
+        // TODO move to config
         CuratorFramework client = CuratorFrameworkFactory.newClient("127.0.0.1:2181", retryPolicy);
 
         client.start();

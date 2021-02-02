@@ -22,6 +22,8 @@ import java.util.List;
 import javax.naming.ConfigurationException;
 
 import org.apache.curator.framework.CuratorFramework;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +34,12 @@ import hr.drigler.lisea.juno.utils.ZooUtils;
 @Configuration
 public class JdbcQueryInitialiser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JdbcQueryInitialiser.class);
+
     private static final String USER_PREFIX = "/lisea/juno/user/";
     private static final String AUTHORITY_PREFIX = "/lisea/juno/authority/";
 
-    private JunoJdbcQueries q = new JunoJdbcQueries();
+    private JunoJdbcQueries q;
     private CuratorFramework client;
 
     @Autowired
@@ -47,12 +51,16 @@ public class JdbcQueryInitialiser {
     @Bean
     public JunoJdbcQueries junoJdbcQueriesInitialiser() throws ConfigurationException, Exception {
 
+        q = new JunoJdbcQueries();
+
         if (client == null) {
             throw new ConfigurationException("Unable to find Zookeeper client!");
         }
 
         getValidateUser();
         getValidateAuthority();
+
+        LOG.debug("Juno queries: {}", q);
 
         return q;
     }
@@ -92,6 +100,8 @@ public class JdbcQueryInitialiser {
         user.setUpdatePassword(updatePassword);
         user.setUpdatePasswordAndEnabled(updatePasswordAndEnabled);
         user.setCountUsersWithUsername(countUsersWithUsername);
+
+        q.setUser(user);
     }
 
     private void getValidateAuthority() throws ConfigurationException, Exception {
@@ -120,5 +130,7 @@ public class JdbcQueryInitialiser {
         authority.setCountAuthorityWithName(countAuthorityWithName);
         authority.setUpdateUserAuthorityByUserAndName(updateUserAuthorityByUserAndName);
         authority.setInsertUserAuthorityByUserAndName(insertUserAuthorityByUserAndName);
+
+        q.setAuthority(authority);
     }
 }

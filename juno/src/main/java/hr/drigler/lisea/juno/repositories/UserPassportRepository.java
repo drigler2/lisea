@@ -31,25 +31,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import hr.drigler.lisea.juno.factories.UserPassportFactory;
 import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.models.JunoJdbcQueries;
+import hr.drigler.lisea.juno.services.IVulcanService;
 
 @Repository
 public class UserPassportRepository extends JdbcDaoSupport implements IUserPassportRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserPassportRepository.class);
-
-    JunoJdbcQueries sql;
+    private final JunoJdbcQueries sql;
+    private final IVulcanService vulcanService;
 
     @Autowired
-    public UserPassportRepository(JunoJdbcQueries sql, DataSource dataSource) {
+    public UserPassportRepository(JunoJdbcQueries sql, DataSource dataSource,
+        IVulcanService vulcanService) {
 
         this.sql = sql;
         setDataSource(dataSource);
+        this.vulcanService = vulcanService;
     }
 
     @Override
@@ -84,18 +86,21 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
     }
 
     @Override
-    public void insertUser(UserDetails user) throws DuplicateKeyException {
+    public void insertUser(IUserPassport user) throws DuplicateKeyException {
 
         LOG.info("Inserting user with username: " + user.getUsername());
-
         String psq = sql.getUser().getInsertUser();
+
+        Long uniqueId =
+            user.getUniqueId() == null ? vulcanService.getVulcanId() : user.getUniqueId();
 
         try {
             getJdbcTemplate().update(psq, //
                 ps -> {
                     ps.setString(1, user.getUsername());
                     ps.setString(2, user.getPassword());
-                    ps.setBoolean(3, user.isEnabled());
+                    ps.setLong(3, uniqueId);
+                    ps.setBoolean(4, user.isEnabled());
                 });
         }
         catch (DuplicateKeyException e) {
@@ -160,7 +165,8 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
         Map<String, HashSet<String>> userPassportMap = new HashMap<>();
 
         String currentUsername = null;
-        List<String> dbFields = sql.getUser().getFields();
+        List<String> dbFields = new LinkedList<>();
+        dbFields.addAll(sql.getUser().getFields());
         dbFields.addAll(sql.getAuthority().getFields());
 
         while (rs.next()) {

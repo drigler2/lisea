@@ -16,22 +16,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.repositories;
 
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
-import hr.drigler.lisea.juno.models.IUserPassport;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface IUserPassportRepository {
+import hr.drigler.lisea.juno.models.IVulcanId;
 
-    IUserPassport fetchByUsername(String username);
+@Component
+public class VulcanRepository implements IVulcanRepository {
 
-    Integer countUserByUsername(String username);
+    @Override
+    public IVulcanId getVulcanId() {
 
-    void insertUser(IUserPassport user) throws DuplicateKeyException;
+        RestTemplate template = new RestTemplate();
 
-    void updateUser(IUserPassport userPassport);
+        // TODO move to mercury
+        return template.getForEntity("http://localhost:8180", VulcanId.class).getBody();
+    }
 
-    void deleteUser(String username);
+    public static class VulcanId implements IVulcanId {
 
-    void updateUserPassport(String username, String newPassword);
+        Long vulcanId;
 
+        @Override
+        @JsonProperty(value = "snowflakedId")
+        public Long getVulcanId() {
+
+            return vulcanId;
+        }
+    }
 }

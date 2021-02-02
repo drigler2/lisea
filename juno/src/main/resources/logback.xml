@@ -18,8 +18,16 @@
   <logger name="org.springframework" level="INFO" additivity="false">
     <appender-ref ref="STDOUT" />
   </logger>
+
+  <logger name="org.springframework.beans.factory" level="DEBUG" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
   
   <logger name="org.springframework.jdbc.core.JdbcTemplate" level="TRACE" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  
+  <logger name="com.zaxxer.hikari" level="INFO" additivity="false">
     <appender-ref ref="STDOUT" />
   </logger>
   

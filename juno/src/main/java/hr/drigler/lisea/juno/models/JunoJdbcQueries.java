@@ -22,12 +22,12 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class JunoJdbcQueries implements Serializable {
-
-    private static final long serialVersionUID = 3761098866943972812L;
 
     private String schema;
     private User user;
@@ -35,11 +35,12 @@ public class JunoJdbcQueries implements Serializable {
 
     @Getter
     @Setter
+    @ToString
     public class User implements Serializable {
 
-        private static final long serialVersionUID = 2498970123525212674L;
-
-        private final List<String> fields = Arrays.asList("id", "username", "password", "enabled");
+        // TODO move to mercury
+        private final List<String> fields =
+            Arrays.asList("id", "username", "password", "unique_id", "enabled");
         private String selectAllUsers;
         private String selectUserByUsername;
         private String insertUser;
@@ -54,10 +55,10 @@ public class JunoJdbcQueries implements Serializable {
 
     @Getter
     @Setter
+    @ToString
     public class Authority implements Serializable {
 
-        private final static long serialVersionUID = 2937227203124590458L;
-
+        // TODO move to mercury
         private final List<String> fields = Arrays.asList("id", "authority_name");
         private String selectAllAuthorities;
         private String selectAuthorityByName;

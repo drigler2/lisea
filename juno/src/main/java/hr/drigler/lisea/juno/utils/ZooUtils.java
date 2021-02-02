@@ -18,10 +18,9 @@ package hr.drigler.lisea.juno.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 import javax.naming.ConfigurationException;
-
-import org.springframework.util.StringUtils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -40,7 +39,7 @@ public class ZooUtils {
     public static void validateList(List<Object> validationList) throws ConfigurationException {
 
         for (Object i : validationList) {
-            if (StringUtils.isEmpty(i)) {
+            if (Objects.isNull(i)) {
                 throw new ConfigurationException(
                     "Got instance of Zookeeper client, but some of the configuration was missing!");
             }

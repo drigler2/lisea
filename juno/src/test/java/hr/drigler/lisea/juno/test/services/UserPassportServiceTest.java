@@ -31,29 +31,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import hr.drigler.lisea.juno.models.Authority;
 import hr.drigler.lisea.juno.models.IAuthority;
+import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.models.UserPassport;
 import hr.drigler.lisea.juno.services.DuplicateUserException;
 import hr.drigler.lisea.juno.services.IUserPassportService;
+import hr.drigler.lisea.juno.services.IVulcanService;
 import hr.drigler.lisea.juno.services.exceptions.AssignUserAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.DuplicateAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.WrongPasswordException;
 
 @SpringBootTest
+//@ExtendWith(SpringExtension.class)
+//@EnableAutoConfiguration
 public class UserPassportServiceTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserPassportServiceTest.class);
 
-    private IUserPassportService service;
-    private PasswordEncoder pCoder;
+    private final IUserPassportService service;
+    private final PasswordEncoder pCoder;
+    private final IVulcanService vulcan;
 
     @Autowired
-    public UserPassportServiceTest(IUserPassportService service, PasswordEncoder pCoder) {
+    public UserPassportServiceTest(IUserPassportService service, PasswordEncoder pCoder,
+        IVulcanService vulcan) {
 
         this.service = service;
         this.pCoder = pCoder;
+        this.vulcan = vulcan;
     }
 
-//    @Test
+    @Test
     public void loadUserDetailsByUsernameTest() {
 
         LOG.info("Running loadUserDetailsByUsernameTest");
@@ -66,7 +73,7 @@ public class UserPassportServiceTest {
         assertThat(user.getPassword().equals("admin"));
     }
 
-//    @Test
+    @Test
     public void createUser() {
 
         LOG.info("Running createUser");
@@ -75,7 +82,8 @@ public class UserPassportServiceTest {
         List<IAuthority> authList = Arrays.asList(new Authority(true, "TEST"),
             new Authority(true, "DAMIR"), new Authority(true, "ADMIN"));
 
-        UserDetails user = new UserPassport("testUser", password, true, authList);
+        IUserPassport user =
+            new UserPassport("testUser", password, true, vulcan.getVulcanId(), authList);
 
         try {
             service.createUserHandleDuplicates(user);
@@ -87,7 +95,7 @@ public class UserPassportServiceTest {
         }
     }
 
-//    @Test
+    @Test
     public void changeUserPassword() {
 
         LOG.info("Running changeUserPassword");

@@ -14,24 +14,28 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
-package hr.drigler.lisea.juno.repositories;
+package hr.drigler.lisea.juno.services;
 
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import hr.drigler.lisea.juno.models.IUserPassport;
+import hr.drigler.lisea.juno.repositories.IVulcanRepository;
 
-public interface IUserPassportRepository {
+@Service
+public class VulcanService implements IVulcanService {
 
-    IUserPassport fetchByUsername(String username);
+    IVulcanRepository repo;
 
-    Integer countUserByUsername(String username);
+    @Autowired
+    public VulcanService(IVulcanRepository repo) {
 
-    void insertUser(IUserPassport user) throws DuplicateKeyException;
+        this.repo = repo;
+    }
 
-    void updateUser(IUserPassport userPassport);
+    @Override
+    public Long getVulcanId() {
 
-    void deleteUser(String username);
-
-    void updateUserPassport(String username, String newPassword);
+        return repo.getVulcanId().getVulcanId();
+    }
 
 }

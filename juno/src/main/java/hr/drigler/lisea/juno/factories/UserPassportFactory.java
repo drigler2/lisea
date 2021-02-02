@@ -52,24 +52,26 @@ public class UserPassportFactory {
         // TODO externalize?
         String username = resultSet.get("username").iterator().next();
         String password = resultSet.get("password").iterator().next();
+        Long uniqueId = Long.parseLong(resultSet.get("unique_id").iterator().next());
         boolean enabled = resultSet.get("enabled").iterator().next().equals("t") ? true : false;
         HashSet<String> authorityStringSet = resultSet.get("authority_name");
 
         Set<IAuthority> authorities = AuthorityFactory.buildFromRS(authorityStringSet);
 
-        return new UserPassport(username, password, enabled, authorities);
+        return new UserPassport(username, password, enabled, uniqueId, authorities);
     }
 
-    public static IUserPassport buildFromUserDetails(UserDetails user) {
+    public static IUserPassport buildFromUserDetails(UserDetails user, Long uniqueId) {
 
-        return new UserPassport(user.getUsername(), user.getPassword(), user.isEnabled(),
+        return new UserPassport(user.getUsername(), user.getPassword(), user.isEnabled(), uniqueId,
             user.getAuthorities());
     }
 
-    public static IUserPassport buildEnabledUser(String username, String encodedPass) {
+    public static IUserPassport buildEnabledUser(String username, String encodedPass,
+        Long uniqueId) {
 
         List<Authority> auth = Arrays.asList(new Authority(true, "user"));
 
-        return new UserPassport(username, encodedPass, true, auth);
+        return new UserPassport(username, encodedPass, true, uniqueId, auth);
     }
 }
