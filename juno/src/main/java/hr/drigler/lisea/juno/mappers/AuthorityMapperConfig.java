@@ -14,33 +14,16 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
-package hr.drigler.lisea.juno.utils;
+package hr.drigler.lisea.juno.mappers;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
+import org.springframework.context.annotation.Bean;
 
-import javax.naming.ConfigurationException;
+public class AuthorityMapperConfig {
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+    @Bean
+    public IAuthortyMapper getConfig() {
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ZooUtils {
-
-    /**
-     * bytes to string, UTF-8
-     **/
-    public static String bToS(byte[] b) {
-
-        return new String(b, StandardCharsets.UTF_8);
+        return null;
     }
 
-    public static void validateList(List<Object> validationList) throws ConfigurationException {
-
-        if (validationList.stream().filter(Objects::isNull).findAny().isPresent()) {
-            throw new ConfigurationException(
-                "Got instance of Zookeeper client, but some of the configuration was missing!");
-        }
-    }
 }

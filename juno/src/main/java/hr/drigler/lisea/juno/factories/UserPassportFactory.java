@@ -40,6 +40,7 @@ public class UserPassportFactory {
      * 
      * @throws SQLException
      **/
+    @Deprecated
     public static IUserPassport buildFromRS(Map<String, HashSet<String>> resultSet)
         throws SQLException {
 

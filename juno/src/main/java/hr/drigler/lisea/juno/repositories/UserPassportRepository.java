@@ -16,14 +16,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.repositories;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -33,7 +25,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import hr.drigler.lisea.juno.factories.UserPassportFactory;
+import hr.drigler.lisea.juno.mappers.IUserPassportMapper;
 import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.models.JunoJdbcQueries;
 import hr.drigler.lisea.juno.services.IVulcanService;
@@ -44,14 +36,16 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
     private static final Logger LOG = LoggerFactory.getLogger(UserPassportRepository.class);
     private final JunoJdbcQueries sql;
     private final IVulcanService vulcanService;
+    private final IUserPassportMapper mapper;
 
     @Autowired
     public UserPassportRepository(JunoJdbcQueries sql, DataSource dataSource,
-        IVulcanService vulcanService) {
+        IVulcanService vulcanService, IUserPassportMapper mapper) {
 
         this.sql = sql;
         setDataSource(dataSource);
         this.vulcanService = vulcanService;
+        this.mapper = mapper;
     }
 
     @Override
@@ -60,16 +54,8 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
         LOG.info("Fetching user by username: " + username);
 
         String psq = sql.getUser().getSelectUserByUsername();
-        List<IUserPassport> resultList = getJdbcTemplate().query(psq, //
-            ps -> ps.setString(1, username), //
-            this::userPassportExtractor);
-
-        int size = resultList.size();
-        if (size > 1) {
-            LOG.error("Found more then one user with username: {}", username);
-        }
-        return size == 1 ? resultList.get(0) : null;
-
+        return getJdbcTemplate().query(psq, ps -> ps.setString(1, username),
+            mapper::mapResultSetToUserPassport);
     }
 
     @Override
@@ -78,8 +64,7 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
         LOG.info("Counting all users with username: " + username);
 
         String psq = sql.getUser().getCountUsersWithUsername();
-        return getJdbcTemplate().query(psq, //
-            ps -> ps.setString(1, username), //
+        return getJdbcTemplate().query(psq, ps -> ps.setString(1, username), //
             rs -> {
                 return rs.getInt(0);
             });
@@ -95,13 +80,12 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
             user.getUniqueId() == null ? vulcanService.getVulcanId() : user.getUniqueId();
 
         try {
-            getJdbcTemplate().update(psq, //
-                ps -> {
-                    ps.setString(1, user.getUsername());
-                    ps.setString(2, user.getPassword());
-                    ps.setLong(3, uniqueId);
-                    ps.setBoolean(4, user.isEnabled());
-                });
+            getJdbcTemplate().update(psq, ps -> {
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getPassword());
+                ps.setLong(3, uniqueId);
+                ps.setBoolean(4, user.isEnabled());
+            });
         }
         catch (DuplicateKeyException e) {
             LOG.error("Attempted to create user {} with existing username!", user.getUsername());
@@ -126,12 +110,11 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
         }
 
         String psq = sql.getUser().getUpdatePasswordAndEnabled();
-        getJdbcTemplate().update(psq, //
-            ps -> {
-                ps.setString(1, newUserPassport.getPassword());
-                ps.setBoolean(2, newUserPassport.isEnabled());
-                ps.setString(3, oldUser.getUsername());
-            });
+        getJdbcTemplate().update(psq, ps -> {
+            ps.setString(1, newUserPassport.getPassword());
+            ps.setBoolean(2, newUserPassport.isEnabled());
+            ps.setString(3, oldUser.getUsername());
+        });
 
     }
 
@@ -158,38 +141,4 @@ public class UserPassportRepository extends JdbcDaoSupport implements IUserPassp
             });
 
     }
-
-    private List<IUserPassport> userPassportExtractor(ResultSet rs) throws SQLException {
-
-        List<IUserPassport> resultList = new LinkedList<>();
-        Map<String, HashSet<String>> userPassportMap = new HashMap<>();
-
-        String currentUsername = null;
-        List<String> dbFields = new LinkedList<>();
-        dbFields.addAll(sql.getUser().getFields());
-        dbFields.addAll(sql.getAuthority().getFields());
-
-        while (rs.next()) {
-
-            if (!rs.getString("username").equals(currentUsername) && !rs.isFirst()) {
-
-                resultList.add(UserPassportFactory.buildFromRS(userPassportMap));
-                userPassportMap.clear();
-            }
-
-            for (String dbField : dbFields) {
-
-                userPassportMap.putIfAbsent(dbField, new HashSet<String>());
-                userPassportMap.get(dbField).add(rs.getString(dbField));
-            }
-
-            if (rs.isLast()) {
-                resultList.add(UserPassportFactory.buildFromRS(userPassportMap));
-            }
-
-            currentUsername = rs.getString("username");
-        }
-        return resultList;
-    }
-
 }

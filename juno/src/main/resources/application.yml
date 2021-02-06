@@ -4,4 +4,12 @@ spring.datasource.populator:
   filename: credentials.sql
   enabled: true
 
-zookeeper.url: 127.0.0.1:2181
+zookeeper:
+  url: 127.0.0.1:2181
+  url_prefix: 
+    juno: 
+      config: /lisea/juno/config/
+      field_names: /lisea/juno/field_names/
+      
+
+

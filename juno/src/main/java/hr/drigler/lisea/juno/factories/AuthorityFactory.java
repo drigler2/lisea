@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthorityFactory {
 
+    @Deprecated
     public static Set<IAuthority> buildFromRS(Collection<String> authorityNameSet) {
 
         Set<IAuthority> authSet = new HashSet<>();
