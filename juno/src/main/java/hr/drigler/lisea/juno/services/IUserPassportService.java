@@ -23,6 +23,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.services.exceptions.AssignUserAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.DuplicateAuthorityException;
+import hr.drigler.lisea.juno.services.exceptions.DuplicateUserException;
 import hr.drigler.lisea.juno.services.exceptions.WrongPasswordException;
 
 public interface IUserPassportService extends UserDetailsManager, UserDetailsService {

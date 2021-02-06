@@ -16,13 +16,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.naming.ConfigurationException;
 import javax.sql.DataSource;
 
-import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,25 +27,22 @@ import org.springframework.context.annotation.Configuration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import hr.drigler.lisea.juno.utils.ZooUtils;
-
 @Configuration
 public class DataSourceConfig {
 
-    private final CuratorFramework client;
-
+    private final ICuratorFrameworkConfig zoo;
     private String url;
     private String username;
     private String password;
     private Integer poolSize;
     private Long timeout;
     @Value("${zookeeper.url_prefix.juno.config}")
-    private String junoPrefix;
+    private String prefix;
 
     @Autowired
-    public DataSourceConfig(CuratorFramework client) {
+    public DataSourceConfig(ICuratorFrameworkConfig zoo) {
 
-        this.client = client;
+        this.zoo = zoo;
     }
 
     @Bean
@@ -70,21 +63,11 @@ public class DataSourceConfig {
 
     private void getValidateConfig() throws ConfigurationException, Exception {
 
-        if (client == null) {
-            throw new ConfigurationException("Unable to find Zookeeper client!");
-        }
-
-        url = ZooUtils.bToS(client.getData().forPath(junoPrefix + "db_url"));
-        username = ZooUtils.bToS(client.getData().forPath(junoPrefix + "db_username"));
-        password = ZooUtils.bToS(client.getData().forPath(junoPrefix + "db_password"));
-        poolSize =
-            Integer.parseInt(ZooUtils.bToS(client.getData().forPath(junoPrefix + "db_poolSize")));
-        timeout = Long.parseLong(
-            ZooUtils.bToS(client.getData().forPath(junoPrefix + "db_connectionTimeout")));
-
-        List<Object> validationList = Arrays.asList(url, username, password, poolSize, timeout);
-
-        ZooUtils.validateList(validationList);
+        url = zoo.getRequiredZooData(prefix + "db_url");
+        username = zoo.getRequiredZooData(prefix + "db_username");
+        password = zoo.getRequiredZooData(prefix + "db_password");
+        poolSize = Integer.parseInt(zoo.getRequiredZooData(prefix + "db_poolSize"));
+        timeout = Long.parseLong(zoo.getRequiredZooData(prefix + "db_connectionTimeout"));
     }
 
 }

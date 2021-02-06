@@ -33,11 +33,11 @@ import hr.drigler.lisea.juno.models.Authority;
 import hr.drigler.lisea.juno.models.IAuthority;
 import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.models.UserPassport;
-import hr.drigler.lisea.juno.services.DuplicateUserException;
 import hr.drigler.lisea.juno.services.IUserPassportService;
 import hr.drigler.lisea.juno.services.IVulcanService;
 import hr.drigler.lisea.juno.services.exceptions.AssignUserAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.DuplicateAuthorityException;
+import hr.drigler.lisea.juno.services.exceptions.DuplicateUserException;
 import hr.drigler.lisea.juno.services.exceptions.WrongPasswordException;
 
 @SpringBootTest

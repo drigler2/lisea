@@ -16,52 +16,37 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.mappers;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.naming.ConfigurationException;
 
-import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import hr.drigler.lisea.juno.utils.ZooUtils;
+import hr.drigler.lisea.juno.config.ICuratorFrameworkConfig;
 
 @Configuration
 public class UserPassportMapperConfig {
 
-    private final CuratorFramework client;
+    private final ICuratorFrameworkConfig zoo;
     @Value("${zookeeper.url_prefix.juno.field_names}")
-    private String junoPrefix;
+    private String prefix;
 
     @Autowired
-    public UserPassportMapperConfig(CuratorFramework client) {
+    public UserPassportMapperConfig(ICuratorFrameworkConfig zoo) {
 
-        this.client = client;
+        this.zoo = zoo;
     }
 
     @Bean
     public IUserPassportMapper getMapper() throws ConfigurationException, Exception {
 
-        if (client == null) {
-            throw new ConfigurationException("Unable to find Zookeeper client!");
-        }
+        String username = zoo.getRequiredZooData(prefix + "username");
+        String password = zoo.getRequiredZooData(prefix + "password");
+        String unique_id = zoo.getRequiredZooData(prefix + "unique_id");
+        String enabled = zoo.getRequiredZooData(prefix + "enabled");
+        String authority_name = zoo.getRequiredZooData(prefix + "authority_name");
 
-        String username = ZooUtils.bToS(client.getData().forPath(junoPrefix + "username"));
-        String password = ZooUtils.bToS(client.getData().forPath(junoPrefix + "password"));
-        String unique_id = ZooUtils.bToS(client.getData().forPath(junoPrefix + "unique_id"));
-        String enabled = ZooUtils.bToS(client.getData().forPath(junoPrefix + "enabled"));
-        String authority_name =
-            ZooUtils.bToS(client.getData().forPath(junoPrefix + "authority_name"));
-
-        List<Object> validationList =
-            Arrays.asList(username, password, unique_id, enabled, authority_name);
-
-        ZooUtils.validateList(validationList);
-
-        client.close();
         return new UserPassportMapper(username, password, unique_id, enabled, authority_name);
     }
 

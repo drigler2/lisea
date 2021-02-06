@@ -1,4 +1,4 @@
-package hr.drigler.lisea.juno.services;
+package hr.drigler.lisea.juno.services.exceptions;
 
 public class DuplicateUserException extends Exception {
 

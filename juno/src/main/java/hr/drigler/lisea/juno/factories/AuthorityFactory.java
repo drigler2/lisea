@@ -16,26 +16,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.factories;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import hr.drigler.lisea.juno.models.Authority;
-import hr.drigler.lisea.juno.models.IAuthority;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthorityFactory {
-
-    @Deprecated
-    public static Set<IAuthority> buildFromRS(Collection<String> authorityNameSet) {
-
-        Set<IAuthority> authSet = new HashSet<>();
-
-        authorityNameSet.forEach(rs -> authSet.add(new Authority(true, rs)));
-
-        return authSet;
-    }
 
 }

@@ -14,33 +14,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
-package hr.drigler.lisea.juno.utils;
-
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
+package hr.drigler.lisea.juno.config;
 
 import javax.naming.ConfigurationException;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+public interface ICuratorFrameworkConfig {
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ZooUtils {
+    String getRequiredZooData(String path) throws ConfigurationException, Exception;
 
-    /**
-     * bytes to string, UTF-8
-     **/
-    public static String bToS(byte[] b) {
-
-        return new String(b, StandardCharsets.UTF_8);
-    }
-
-    public static void validateList(List<Object> validationList) throws ConfigurationException {
-
-        if (validationList.stream().filter(Objects::isNull).findAny().isPresent()) {
-            throw new ConfigurationException(
-                "Got instance of Zookeeper client, but some of the configuration was missing!");
-        }
-    }
 }

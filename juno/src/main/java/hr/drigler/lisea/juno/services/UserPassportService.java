@@ -30,6 +30,7 @@ import hr.drigler.lisea.juno.models.IUserPassport;
 import hr.drigler.lisea.juno.repositories.IUserPassportRepository;
 import hr.drigler.lisea.juno.services.exceptions.AssignUserAuthorityException;
 import hr.drigler.lisea.juno.services.exceptions.DuplicateAuthorityException;
+import hr.drigler.lisea.juno.services.exceptions.DuplicateUserException;
 import hr.drigler.lisea.juno.services.exceptions.WrongPasswordException;
 
 @Service

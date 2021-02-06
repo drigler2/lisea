@@ -8,8 +8,9 @@ zookeeper:
   url: 127.0.0.1:2181
   url_prefix: 
     juno: 
+      queries:
+        user: /lisea/juno/user/
+        authority: /lisea/juno/authority/
       config: /lisea/juno/config/
       field_names: /lisea/juno/field_names/
       
-
-

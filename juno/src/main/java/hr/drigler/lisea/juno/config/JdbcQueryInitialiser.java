@@ -16,36 +16,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.naming.ConfigurationException;
 
-import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import hr.drigler.lisea.juno.models.JunoJdbcQueries;
-import hr.drigler.lisea.juno.utils.ZooUtils;
 
 @Configuration
 public class JdbcQueryInitialiser {
 
     private static final Logger LOG = LoggerFactory.getLogger(JdbcQueryInitialiser.class);
 
-    private static final String USER_PREFIX = "/lisea/juno/user/";
-    private static final String AUTHORITY_PREFIX = "/lisea/juno/authority/";
-
     private JunoJdbcQueries q;
-    private CuratorFramework client;
+    private final ICuratorFrameworkConfig zoo;
+    @Value("${zookeeper.url_prefix.juno.queries.user}")
+    private String userPrefix;
+    @Value("${zookeeper.url_prefix.juno.queries.authority}")
+    private String authorityPrefix;
 
     @Autowired
-    public JdbcQueryInitialiser(CuratorFramework client) {
+    public JdbcQueryInitialiser(ICuratorFrameworkConfig zoo) {
 
-        this.client = client;
+        this.zoo = zoo;
     }
 
     @Bean
@@ -53,14 +50,10 @@ public class JdbcQueryInitialiser {
 
         q = new JunoJdbcQueries();
 
-        if (client == null) {
-            throw new ConfigurationException("Unable to find Zookeeper client!");
-        }
-
         getValidateUser();
         getValidateAuthority();
 
-        LOG.debug("Juno queries: {}", q);
+        LOG.info("Juno queries: {}", q);
 
         return q;
     }
@@ -69,27 +62,17 @@ public class JdbcQueryInitialiser {
 
         JunoJdbcQueries.User user = q.new User();
 
-        String selectAllUsers =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "selectAllUsers"));
-        String selectUserByUsername =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "selectUserByUsername"));
-        String insertUser = ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "insertUser"));
-        String insertUserAndEnable =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "insertUserAndEnable"));
-        String enableUser = ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "enableUser"));
-        String disableUser = ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "disableUser"));
-        String updatePassword =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "updatePassword"));
+        String selectAllUsers = zoo.getRequiredZooData(userPrefix + "selectAllUsers");
+        String selectUserByUsername = zoo.getRequiredZooData(userPrefix + "selectUserByUsername");
+        String insertUser = zoo.getRequiredZooData(userPrefix + "insertUser");
+        String insertUserAndEnable = zoo.getRequiredZooData(userPrefix + "insertUserAndEnable");
+        String enableUser = zoo.getRequiredZooData(userPrefix + "enableUser");
+        String disableUser = zoo.getRequiredZooData(userPrefix + "disableUser");
+        String updatePassword = zoo.getRequiredZooData(userPrefix + "updatePassword");
         String updatePasswordAndEnabled =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "updatePasswordAndEnabled"));
+            zoo.getRequiredZooData(userPrefix + "updatePasswordAndEnabled");
         String countUsersWithUsername =
-            ZooUtils.bToS(client.getData().forPath(USER_PREFIX + "countUsersWithUsername"));
-
-        List<Object> validationList = Arrays.asList(selectAllUsers, selectUserByUsername,
-            insertUser, insertUserAndEnable, enableUser, disableUser, updatePassword,
-            updatePasswordAndEnabled, countUsersWithUsername);
-
-        ZooUtils.validateList(validationList);
+            zoo.getRequiredZooData(userPrefix + "countUsersWithUsername");
 
         user.setSelectAllUsers(selectAllUsers);
         user.setSelectUserByUsername(selectUserByUsername);
@@ -109,21 +92,15 @@ public class JdbcQueryInitialiser {
         JunoJdbcQueries.Authority authority = q.new Authority();
 
         String selectAllAuthorities =
-            ZooUtils.bToS(client.getData().forPath(AUTHORITY_PREFIX + "selectAllAuthorities"));
+            zoo.getRequiredZooData(authorityPrefix + "selectAllAuthorities");
         String selectAuthorityByName =
-            ZooUtils.bToS(client.getData().forPath(AUTHORITY_PREFIX + "selectAuthorityByName"));
+            zoo.getRequiredZooData(authorityPrefix + "selectAuthorityByName");
         String countAuthorityWithName =
-            ZooUtils.bToS(client.getData().forPath(AUTHORITY_PREFIX + "countAuthorityWithName"));
-        String updateUserAuthorityByUserAndName = ZooUtils
-            .bToS(client.getData().forPath(AUTHORITY_PREFIX + "updateUserAuthorityByUserAndName"));
-        String insertUserAuthorityByUserAndName = ZooUtils
-            .bToS(client.getData().forPath(AUTHORITY_PREFIX + "insertUserAuthorityByUserAndName"));
-
-        List<Object> validationList =
-            Arrays.asList(selectAllAuthorities, selectAuthorityByName, countAuthorityWithName,
-                updateUserAuthorityByUserAndName, insertUserAuthorityByUserAndName);
-
-        ZooUtils.validateList(validationList);
+            zoo.getRequiredZooData(authorityPrefix + "countAuthorityWithName");
+        String updateUserAuthorityByUserAndName =
+            zoo.getRequiredZooData(authorityPrefix + "updateUserAuthorityByUserAndName");
+        String insertUserAuthorityByUserAndName =
+            zoo.getRequiredZooData(authorityPrefix + "insertUserAuthorityByUserAndName");
 
         authority.setSelectAllAuthorities(selectAllAuthorities);
         authority.setSelectAuthorityByName(selectAuthorityByName);
