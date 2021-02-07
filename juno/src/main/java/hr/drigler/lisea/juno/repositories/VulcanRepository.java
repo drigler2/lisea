@@ -16,29 +16,36 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ***************************************************************************/
 package hr.drigler.lisea.juno.repositories;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import hr.drigler.lisea.juno.config.VulcanConfig.VulcanWrapper;
 import hr.drigler.lisea.juno.models.IVulcanId;
 
 @Component
 public class VulcanRepository implements IVulcanRepository {
 
+    private final VulcanWrapper vulcan;
+
+    @Autowired
+    public VulcanRepository(VulcanWrapper vulcan) {
+
+        this.vulcan = vulcan;
+    }
+
     @Override
     public IVulcanId getVulcanId() {
 
-        RestTemplate template = new RestTemplate();
-
-        // TODO move to mercury
-        return template.getForEntity("http://localhost:8180", VulcanId.class).getBody();
+        return vulcan.getVulcanEndpoint().getForEntity("", VulcanId.class).getBody();
     }
 
     public static class VulcanId implements IVulcanId {
 
         Long vulcanId;
 
+        // TODO workaround compile time const
         @Override
         @JsonProperty(value = "snowflakedId")
         public Long getVulcanId() {

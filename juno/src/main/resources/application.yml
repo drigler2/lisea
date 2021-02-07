@@ -13,4 +13,8 @@ zookeeper:
         authority: /lisea/juno/authority/
       config: /lisea/juno/config/
       field_names: /lisea/juno/field_names/
-      
+    vulcan: /lisea/vulcan/instance_infos/
+        
+vulcan:
+  instance_id: 1
+  id_name: snowflakedId
