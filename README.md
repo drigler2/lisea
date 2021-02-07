@@ -48,8 +48,10 @@ You have to have zookeeper up and running in order to mercury to do
 it's job, as it distributes all this info via zookeeper.
 
 ###### vulcan
-work in progress, will be (somewhat) unique and serial id
-distributor for the ecosystem.
+cpp asio based application server which produces (somewhat) serial
+ID-s based on snowflake(d) implementations. There are minor issues
+with negative id-s but server can handle up to 10000 req/s on my PC
+(oldish i5) which is good enaough for now.
 
 ### Reference Documentation
 For further reference, please consider the following sections:
